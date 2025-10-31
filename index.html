@@ -3,202 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>? WELCOME TO MY RETRO SITE ?</title>
+    <title>RETRO SPACE SHOOTER</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Animated Header -->
-        <header>
-            <marquee behavior="scroll" direction="left" class="top-banner">
-                <span class="blink">?</span> NOW SERVING THE COOLEST RETRO VIBES ON THE WEB <span class="blink">?</span> 
-                <span class="blink">?</span> BEST VIEWED IN NETSCAPE NAVIGATOR 3.0 <span class="blink">?</span>
-            </marquee>
-            
-            <h1 class="main-title">
-                <span class="neon-text">???????????????????</span><br>
-                <span class="neon-text">?</span>  <span class="blink">?</span>  <span class="glitch">RETRO</span>  <span class="blink">?</span>  <span class="neon-text">?</span><br>
-                <span class="neon-text">?</span>     <span class="glow">ZONE</span>     <span class="neon-text">?</span><br>
-                <span class="neon-text">???????????????????</span>
-            </h1>
-            
-            <div class="visitor-counter">
-                <span class="ascii-art">??????????????????</span><br>
-                <span class="ascii-art">?</span> VISITORS: <span id="counter">1337</span> <span class="ascii-art">?</span><br>
-                <span class="ascii-art">??????????????????</span>
+    <div class="game-container">
+        <div class="hud">
+            <div class="hud-item">
+                <span class="label">SCORE:</span>
+                <span id="score" class="value">0</span>
             </div>
-        </header>
-
-        <!-- Navigation -->
-        <nav class="retro-nav">
-            <table cellpadding="10" cellspacing="0">
-                <tr>
-                    <td><a href="#home" class="nav-link blink">? HOME ?</a></td>
-                    <td><a href="#about" class="nav-link blink">? ABOUT ?</a></td>
-                    <td><a href="#gallery" class="nav-link blink">? GALLERY ?</a></td>
-                    <td><a href="#links" class="nav-link blink">? LINKS ?</a></td>
-                    <td><a href="#guestbook" class="nav-link blink">? GUESTBOOK ?</a></td>
-                </tr>
-            </table>
-        </nav>
-
-        <!-- Main Content -->
-        <main>
-            <section id="home">
-                <h2><span class="blink">>>> </span>WELCOME VISITOR<span class="blink"> <<<</span></h2>
-                
-                <div class="content-box">
-                    <p class="rainbow-text">?? YOU HAVE ENTERED THE MOST RADICAL RETRO WEBSITE ON THE INTERNET! ??</p>
-                    
-                    <p>This site is dedicated to the <span class="glow">GLORIOUS 90s</span> and early 2000s web aesthetic!</p>
-                    
-                    <p>Featuring:</p>
-                    <ul class="retro-list">
-                        <li>? Blinking text (because we can!)</li>
-                        <li>?? Rainbow animations</li>
-                        <li>?? Neon glows and effects</li>
-                        <li>?? Classic pixel art vibes</li>
-                        <li>?? CRT monitor simulation</li>
-                        <li>?? MIDI music (in spirit!)</li>
-                    </ul>
-                    
-                    <div class="construction-banner">
-                        <marquee behavior="alternate" scrollamount="5">
-                            ?? SITE UNDER CONSTRUCTION ?? BUT STILL TOTALLY AWESOME ??
-                        </marquee>
-                    </div>
-                </div>
-            </section>
-
-            <section id="about">
-                <h2><span class="blink">>>> </span>ABOUT THIS SITE<span class="blink"> <<<</span></h2>
-                
-                <div class="content-box">
-                    <div class="ascii-frame">
-                        <pre>
-?????????????????????????????????????
-?  THIS SITE IS DESIGNED WITH       ?
-?  PURE NOSTALGIA IN MIND!          ?
-?                                   ?
-?  Remember the days when:         ?
-?  ? Tables ruled layouts           ?
-?  ? &lt;BLINK&gt; was a thing            ?
-?  ? Visitor counters were cool    ?
-?  ? Midis played on autoplay        ?
-?  ? Everything was animated         ?
-?                                   ?
-?  Those were the days!             ?
-?????????????????????????????????????
-                        </pre>
-                    </div>
-                </div>
-            </section>
-
-            <section id="gallery">
-                <h2><span class="blink">>>> </span>PIXEL ART GALLERY<span class="blink"> <<<</span></h2>
-                
-                <div class="content-box">
-                    <div class="pixel-gallery">
-                        <div class="pixel-art pixel-1">
-                            <pre>
-   /\_/\
-  ( o.o )
-   > ^ <
-                            </pre>
-                            <p>Cat.exe</p>
-                        </div>
-                        <div class="pixel-art pixel-2">
-                            <pre>
-  ___
- /   \
-|  *  |
- \___/
-                            </pre>
-                            <p>Smiley.obj</p>
-                        </div>
-                        <div class="pixel-art pixel-3">
-                            <pre>
-   ?
-  / \
- /___\
-                            </pre>
-                            <p>Star.wav</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="links">
-                <h2><span class="blink">>>> </span>COOL LINKS<span class="blink"> <<<</span></h2>
-                
-                <div class="content-box">
-                    <p class="link-header">CHECK OUT THESE RADICAL SITES:</p>
-                    <ul class="links-list">
-                        <li><a href="#" class="retro-link">?? The Retro Web Museum</a></li>
-                        <li><a href="#" class="retro-link">?? 90s Web Archive</a></li>
-                        <li><a href="#" class="retro-link">?? Geocities Forever</a></li>
-                        <li><a href="#" class="retro-link">?? Under Construction Generator</a></li>
-                        <li><a href="#" class="retro-link">?? MIDI Music Collection</a></li>
-                    </ul>
-                    
-                    <div class="button-container">
-                        <button class="retro-button" onclick="alert('Button clicked! Just like the 90s!')">
-                            CLICK ME!
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="guestbook">
-                <h2><span class="blink">>>> </span>SIGN MY GUESTBOOK<span class="blink"> <<<</span></h2>
-                
-                <div class="content-box">
-                    <form class="retro-form">
-                        <table cellpadding="10">
-                            <tr>
-                                <td><label class="retro-label">Your Name:</label></td>
-                                <td><input type="text" class="retro-input" placeholder="Enter your rad name"></td>
-                            </tr>
-                            <tr>
-                                <td><label class="retro-label">Email:</label></td>
-                                <td><input type="email" class="retro-input" placeholder="you@email.com"></td>
-                            </tr>
-                            <tr>
-                                <td><label class="retro-label">Message:</label></td>
-                                <td><textarea class="retro-textarea" rows="5" placeholder="Leave a totally awesome message!"></textarea></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" align="center">
-                                    <button type="submit" class="retro-button">SUBMIT ENTRY</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer>
-            <marquee behavior="scroll" direction="right" class="footer-banner">
-                <span class="blink">?</span> Made with &lt;BLINK&gt; tags and pure nostalgia <span class="blink">?</span>
-                <span class="blink">?</span> Best viewed at 800x600 resolution <span class="blink">?</span>
-                <span class="blink">?</span> Last updated: <span id="date"></span> <span class="blink">?</span>
-            </marquee>
-            
-            <div class="footer-text">
-                <p class="rainbow-text">? 2024 RETRO ZONE - ALL RIGHTS RESERVED (AND THEN SOME)</p>
-                <p class="blink">? ? ? ? ?</p>
+            <div class="hud-item">
+                <span class="label">LIVES:</span>
+                <span id="lives" class="value">3</span>
             </div>
-        </footer>
+            <div class="hud-item">
+                <span class="label">WAVE:</span>
+                <span id="wave" class="value">1</span>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="gameOver" class="game-over hidden">
+            <h1 class="game-over-title">GAME OVER</h1>
+            <p class="final-score">FINAL SCORE: <span id="finalScore">0</span></p>
+            <button id="restartBtn" class="retro-btn">PRESS START</button>
+        </div>
+        
+        <div id="startScreen" class="start-screen">
+            <h1 class="title">RETRO SPACE SHOOTER</h1>
+            <div class="instructions">
+                <p>ARROW KEYS or WASD - MOVE</p>
+                <p>SPACEBAR - SHOOT</p>
+                <p>DESTROY ALL ENEMIES!</p>
+            </div>
+            <button id="startBtn" class="retro-btn pulse">PRESS START</button>
+        </div>
     </div>
-
-    <!-- Floating Elements -->
-    <div class="floating-star">?</div>
-    <div class="floating-star delay-1"> star</div>
-    <div class="floating-star delay-2">?</div>
-    <div class="floating-star delay-3">?</div>
-
+    
     <script src="script.js"></script>
 </body>
 </html>

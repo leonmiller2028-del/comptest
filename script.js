@@ -1,182 +1,465 @@
-// Retro Website JavaScript
-// Because every 90s site needs some JavaScript!
+// Game Setup
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-// Update visitor counter with random increment
-function updateCounter() {
-    const counter = document.getElementById('counter');
-    let currentCount = parseInt(counter.textContent) || 1337;
-    
-    // Random increment between 1-5
-    currentCount += Math.floor(Math.random() * 5) + 1;
-    counter.textContent = currentCount;
-    
-    // Add flash effect
-    counter.style.color = '#ffff00';
-    counter.style.textShadow = '0 0 20px #ffff00';
-    
-    setTimeout(() => {
-        counter.style.color = '';
-        counter.style.textShadow = '';
-    }, 500);
+// Set canvas size
+function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
 }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-// Update date
-function updateDate() {
-    const dateElement = document.getElementById('date');
-    if (dateElement) {
-        const now = new Date();
-        const dateString = now.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-        });
-        dateElement.textContent = dateString.toUpperCase();
-    }
-}
+// Game State
+let gameState = 'start'; // 'start', 'playing', 'gameover'
+let score = 0;
+let lives = 3;
+let wave = 1;
+let keys = {};
+let enemies = [];
+let bullets = [];
+let enemyBullets = [];
+let particles = [];
+let lastEnemySpawn = 0;
+let lastEnemyShot = 0;
 
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Update counter periodically
-    setInterval(updateCounter, 5000);
+// Player
+const player = {
+    x: canvas.width / 2,
+    y: canvas.height - 80,
+    width: 30,
+    height: 30,
+    speed: 5,
+    lastShot: 0,
+    shootCooldown: 250
+};
+
+// Input Handling
+document.addEventListener('keydown', (e) => {
+    keys[e.key.toLowerCase()] = true;
+    keys[e.code] = true;
     
-    // Update date
-    updateDate();
-    
-    // Handle navigation clicks
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
-            
-            if (targetSection) {
-                // Add flash effect
-                targetSection.style.border = '3px solid #ff00ff';
-                targetSection.style.boxShadow = '0 0 30px #ff00ff';
-                
-                setTimeout(() => {
-                    targetSection.style.border = '';
-                    targetSection.style.boxShadow = '';
-                }, 1000);
-                
-                // Smooth scroll
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-    
-    // Handle form submission
-    const retroForm = document.querySelector('.retro-form');
-    if (retroForm) {
-        retroForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show retro alert
-            alert('THANK YOU FOR SIGNING MY GUESTBOOK!\n\nYour entry has been "saved" to the server!\n(Just like in the 90s!)');
-            
-            // Flash effect
-            this.style.border = '2px dashed #ff00ff';
-            this.style.boxShadow = '0 0 20px #ff00ff';
-            
-            setTimeout(() => {
-                this.style.border = '';
-                this.style.boxShadow = '';
-                this.reset();
-            }, 2000);
-        });
-    }
-    
-    // Add random mouse trail effect (90s style!)
-    let trail = [];
-    const maxTrailLength = 20;
-    
-    document.addEventListener('mousemove', function(e) {
-        // Create trail element occasionally
-        if (Math.random() > 0.7) {
-            const trailElement = document.createElement('div');
-            trailElement.className = 'mouse-trail';
-            trailElement.style.position = 'fixed';
-            trailElement.style.left = e.clientX + 'px';
-            trailElement.style.top = e.clientY + 'px';
-            trailElement.style.width = '4px';
-            trailElement.style.height = '4px';
-            trailElement.style.background = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'][Math.floor(Math.random() * 4)];
-            trailElement.style.borderRadius = '50%';
-            trailElement.style.pointerEvents = 'none';
-            trailElement.style.zIndex = '9999';
-            document.body.appendChild(trailElement);
-            
-            setTimeout(() => {
-                trailElement.style.opacity = '0';
-                trailElement.style.transition = 'opacity 0.5s';
-                setTimeout(() => trailElement.remove(), 500);
-            }, 100);
-        }
-    });
-    
-    // Add random blink effects to elements
-    const blinkables = document.querySelectorAll('h2, .content-box, .pixel-art');
-    setInterval(() => {
-        const randomElement = blinkables[Math.floor(Math.random() * blinkables.length)];
-        randomElement.style.filter = 'brightness(1.5)';
-        setTimeout(() => {
-            randomElement.style.filter = '';
-        }, 200);
-    }, 3000);
-    
-    // Console easter egg
-    console.log('%c? RETRO ZONE ?', 'color: #00ff00; font-size: 20px; font-weight: bold;');
-    console.log('%cWelcome to the retro zone! Type "retroSecret()" for a surprise!', 'color: #ff00ff; font-size: 14px;');
-    
-    // Easter egg function
-    window.retroSecret = function() {
-        alert('?? YOU FOUND THE SECRET! ??\n\nYou are now officially RAD!');
-        document.body.style.animation = 'none';
-        setTimeout(() => {
-            document.body.style.background = 'linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff)';
-            document.body.style.backgroundSize = '400% 400%';
-            document.body.style.animation = 'gradientShift 2s ease infinite';
-        }, 100);
-    };
-    
-    // Create floating pixel art occasionally
-    setInterval(() => {
-        if (Math.random() > 0.8) {
-            const pixel = document.createElement('div');
-            pixel.textContent = ['?', '?', '?', '?'][Math.floor(Math.random() * 4)];
-            pixel.style.position = 'fixed';
-            pixel.style.left = Math.random() * 100 + '%';
-            pixel.style.top = '-50px';
-            pixel.style.color = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'][Math.floor(Math.random() * 4)];
-            pixel.style.fontSize = '30px';
-            pixel.style.pointerEvents = 'none';
-            pixel.style.zIndex = '9998';
-            pixel.style.animation = 'floatDown 5s linear forwards';
-            document.body.appendChild(pixel);
-            
-            setTimeout(() => pixel.remove(), 5000);
-        }
-    }, 2000);
-    
-    // Add float down animation if not exists
-    if (!document.querySelector('style[data-float-animation]')) {
-        const style = document.createElement('style');
-        style.setAttribute('data-float-animation', 'true');
-        style.textContent = `
-            @keyframes floatDown {
-                0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-                100% { transform: translateY(calc(100vh + 50px)) rotate(360deg); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+    if (e.code === 'Space' && gameState === 'playing') {
+        e.preventDefault();
+        shootBullet();
     }
 });
 
-// Add some terminal-style console messages
-console.log('%c? RETRO WEBSITE INITIALIZED ?', 'color: #00ff00; font-weight: bold;');
-console.log('%cLoading retro modules...', 'color: #00ffff;');
-console.log('%c? Blink tags: ENABLED', 'color: #00ff00;');
-console.log('%c? Marquee tags: ENABLED', 'color: #00ff00;');
-console.log('%c? Neon effects: ENABLED', 'color: #00ff00;');
-console.log('%c? Nostalgia mode: 100%', 'color: #ff00ff; font-weight: bold;');
+document.addEventListener('keyup', (e) => {
+    keys[e.key.toLowerCase()] = false;
+    keys[e.code] = false;
+});
+
+// Start Game
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('restartBtn').addEventListener('click', startGame);
+
+function startGame() {
+    gameState = 'playing';
+    score = 0;
+    lives = 3;
+    wave = 1;
+    enemies = [];
+    bullets = [];
+    enemyBullets = [];
+    particles = [];
+    player.x = canvas.width / 2;
+    player.y = canvas.height - 80;
+    
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('gameOver').classList.add('hidden');
+    
+    updateHUD();
+    gameLoop();
+}
+
+// Update HUD
+function updateHUD() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('lives').textContent = lives;
+    document.getElementById('wave').textContent = wave;
+}
+
+// Player Movement
+function updatePlayer() {
+    if (keys['ArrowLeft'] || keys['a']) {
+        player.x -= player.speed;
+    }
+    if (keys['ArrowRight'] || keys['d']) {
+        player.x += player.speed;
+    }
+    if (keys['ArrowUp'] || keys['w']) {
+        player.y -= player.speed;
+    }
+    if (keys['ArrowDown'] || keys['s']) {
+        player.y += player.speed;
+    }
+    
+    // Keep player in bounds
+    player.x = Math.max(player.width, Math.min(canvas.width - player.width, player.x));
+    player.y = Math.max(player.height, Math.min(canvas.height - player.height, player.y));
+}
+
+// Draw Player (Spaceship)
+function drawPlayer() {
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    
+    // Ship body
+    ctx.fillStyle = '#0ff';
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = '#0ff';
+    
+    ctx.beginPath();
+    ctx.moveTo(0, -15);
+    ctx.lineTo(-12, 15);
+    ctx.lineTo(0, 10);
+    ctx.lineTo(12, 15);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Cockpit
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath();
+    ctx.arc(0, 0, 4, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Engine glow
+    ctx.fillStyle = '#f80';
+    ctx.shadowColor = '#f80';
+    ctx.beginPath();
+    ctx.arc(-8, 12, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(8, 12, 3, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+}
+
+// Shooting
+function shootBullet() {
+    const now = Date.now();
+    if (now - player.lastShot > player.shootCooldown) {
+        bullets.push({
+            x: player.x,
+            y: player.y - 20,
+            width: 4,
+            height: 12,
+            speed: 8,
+            damage: 1
+        });
+        player.lastShot = now;
+    }
+}
+
+// Update Bullets
+function updateBullets() {
+    bullets = bullets.filter(bullet => {
+        bullet.y -= bullet.speed;
+        return bullet.y > -bullet.height;
+    });
+    
+    enemyBullets = enemyBullets.filter(bullet => {
+        bullet.y += bullet.speed;
+        return bullet.y < canvas.height + bullet.height;
+    });
+}
+
+// Draw Bullets
+function drawBullets() {
+    ctx.shadowBlur = 15;
+    
+    // Player bullets
+    ctx.fillStyle = '#0ff';
+    ctx.shadowColor = '#0ff';
+    bullets.forEach(bullet => {
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+    });
+    
+    // Enemy bullets
+    ctx.fillStyle = '#f00';
+    ctx.shadowColor = '#f00';
+    enemyBullets.forEach(bullet => {
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+    });
+}
+
+// Enemy Management
+function spawnEnemy() {
+    const now = Date.now();
+    const spawnRate = Math.max(1000 - wave * 50, 300);
+    
+    if (now - lastEnemySpawn > spawnRate && enemies.length < 10 + wave) {
+        const type = Math.random() < 0.7 ? 'basic' : 'fast';
+        enemies.push({
+            x: Math.random() * (canvas.width - 40) + 20,
+            y: -30,
+            width: 25,
+            height: 25,
+            speed: type === 'fast' ? 2 + wave * 0.2 : 1 + wave * 0.1,
+            health: type === 'fast' ? 1 : 2,
+            type: type,
+            movePattern: Math.random() < 0.5 ? 'straight' : 'zigzag',
+            offset: Math.random() * Math.PI * 2
+        });
+        lastEnemySpawn = now;
+    }
+}
+
+// Update Enemies
+function updateEnemies() {
+    enemies.forEach(enemy => {
+        if (enemy.movePattern === 'zigzag') {
+            enemy.x += Math.sin(enemy.offset) * 2;
+            enemy.offset += 0.1;
+        }
+        enemy.y += enemy.speed;
+        
+        // Keep in bounds
+        enemy.x = Math.max(enemy.width, Math.min(canvas.width - enemy.width, enemy.x));
+    });
+    
+    // Enemy shooting
+    const now = Date.now();
+    if (now - lastEnemyShot > 2000 - wave * 100) {
+        enemies.forEach(enemy => {
+            if (Math.random() < 0.1 && enemy.y > 50) {
+                enemyBullets.push({
+                    x: enemy.x,
+                    y: enemy.y + 15,
+                    width: 4,
+                    height: 10,
+                    speed: 4
+                });
+            }
+        });
+        lastEnemyShot = now;
+    }
+    
+    // Remove off-screen enemies
+    enemies = enemies.filter(enemy => {
+        if (enemy.y > canvas.height + 50) {
+            lives--;
+            updateHUD();
+            if (lives <= 0) {
+                gameOver();
+            }
+            return false;
+        }
+        return true;
+    });
+}
+
+// Draw Enemies
+function drawEnemies() {
+    enemies.forEach(enemy => {
+        ctx.save();
+        ctx.translate(enemy.x, enemy.y);
+        
+        if (enemy.type === 'fast') {
+            // Fast enemy (red)
+            ctx.fillStyle = '#f00';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#f00';
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 15);
+            ctx.lineTo(-12, -15);
+            ctx.lineTo(0, -10);
+            ctx.lineTo(12, -15);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.fillStyle = '#ff0';
+            ctx.beginPath();
+            ctx.arc(0, 0, 3, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            // Basic enemy (green)
+            ctx.fillStyle = '#0f0';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#0f0';
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 15);
+            ctx.lineTo(-10, -15);
+            ctx.lineTo(0, -10);
+            ctx.lineTo(10, -15);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Wings
+            ctx.fillRect(-15, 0, 10, 3);
+            ctx.fillRect(5, 0, 10, 3);
+        }
+        
+        ctx.restore();
+    });
+}
+
+// Collision Detection
+function checkCollisions() {
+    // Bullet hits enemy
+    bullets.forEach((bullet, bIndex) => {
+        enemies.forEach((enemy, eIndex) => {
+            if (bullet.x > enemy.x - enemy.width / 2 &&
+                bullet.x < enemy.x + enemy.width / 2 &&
+                bullet.y > enemy.y - enemy.height / 2 &&
+                bullet.y < enemy.y + enemy.height / 2) {
+                
+                enemy.health--;
+                bullets.splice(bIndex, 1);
+                
+                if (enemy.health <= 0) {
+                    score += enemy.type === 'fast' ? 20 : 10;
+                    createExplosion(enemy.x, enemy.y, enemy.type === 'fast' ? '#f00' : '#0f0');
+                    enemies.splice(eIndex, 1);
+                    updateHUD();
+                    
+                    // Check wave completion
+                    if (enemies.length === 0 && score > 0 && score % 100 === 0) {
+                        wave++;
+                        updateHUD();
+                    }
+                }
+            }
+        });
+    });
+    
+    // Enemy bullet hits player
+    enemyBullets.forEach((bullet, index) => {
+        if (bullet.x > player.x - player.width / 2 &&
+            bullet.x < player.x + player.width / 2 &&
+            bullet.y > player.y - player.height / 2 &&
+            bullet.y < player.y + player.height / 2) {
+            
+            lives--;
+            enemyBullets.splice(index, 1);
+            createExplosion(player.x, player.y, '#0ff');
+            updateHUD();
+            
+            if (lives <= 0) {
+                gameOver();
+            }
+        }
+    });
+    
+    // Enemy hits player
+    enemies.forEach((enemy, index) => {
+        if (Math.abs(enemy.x - player.x) < (enemy.width + player.width) / 2 &&
+            Math.abs(enemy.y - player.y) < (enemy.height + player.height) / 2) {
+            
+            lives--;
+            createExplosion(enemy.x, enemy.y, enemy.type === 'fast' ? '#f00' : '#0f0');
+            enemies.splice(index, 1);
+            updateHUD();
+            
+            if (lives <= 0) {
+                gameOver();
+            }
+        }
+    });
+}
+
+// Particle Effects
+function createExplosion(x, y, color) {
+    for (let i = 0; i < 15; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            life: 1,
+            decay: 0.02,
+            color: color,
+            size: Math.random() * 4 + 2
+        });
+    }
+}
+
+function updateParticles() {
+    particles = particles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        return p.life > 0;
+    });
+}
+
+function drawParticles() {
+    particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        ctx.restore();
+    });
+}
+
+// Stars Background
+const stars = [];
+for (let i = 0; i < 100; i++) {
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speed: Math.random() * 2 + 0.5,
+        size: Math.random() * 2 + 1
+    });
+}
+
+function drawStars() {
+    ctx.fillStyle = '#fff';
+    stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+            star.y = 0;
+            star.x = Math.random() * canvas.width;
+        }
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+    });
+}
+
+// Game Over
+function gameOver() {
+    gameState = 'gameover';
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('gameOver').classList.remove('hidden');
+}
+
+// Game Loop
+function gameLoop() {
+    if (gameState !== 'playing') return;
+    
+    // Clear canvas
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw stars
+    drawStars();
+    
+    // Update
+    updatePlayer();
+    spawnEnemy();
+    updateEnemies();
+    updateBullets();
+    checkCollisions();
+    updateParticles();
+    
+    // Draw
+    drawParticles();
+    drawEnemies();
+    drawBullets();
+    drawPlayer();
+    
+    requestAnimationFrame(gameLoop);
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    player.x = Math.min(player.x, canvas.width);
+    player.y = Math.min(player.y, canvas.height);
+});
