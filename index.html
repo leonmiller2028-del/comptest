@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Retro Byte Club is a neon-drenched cyberspace straight from the late 80s, complete with synthwave vibes, starfields, and glitchy terminals."
+    />
+    <title>Retro Byte Club</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <nav class="top-nav">
+      <div class="logo">
+        <span class="glitch" data-text="RETRO BYTE">RETRO BYTE</span>
+        <small class="tagline">club // since 1987</small>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#lounge">Lounge</a></li>
+        <li><a href="#contact">Connect</a></li>
+      </ul>
+      <button class="nav-button" id="powerToggle" type="button">Power Down</button>
+    </nav>
+
+    <main>
+      <header id="hero" class="hero-section">
+        <div class="hero-content">
+          <p class="uptime">system uptime: <span id="uptime">00:00:00</span></p>
+          <h1>
+            <span class="hero-title">Enter the Neon Grid</span>
+            <span class="hero-subtitle">Where analog dreams meet digital night</span>
+          </h1>
+          <p class="hero-text">
+            Welcome to the Retro Byte Club, a sanctuary for synthwave seekers,
+            BBS believers, pixel pushers, and floppy disk fanatics. Grab a seat,
+            tune the radio to waveband 88.8, and let the VHS glow wash over you.
+          </p>
+          <div class="hero-actions">
+            <a class="neon-button" href="#lounge">Enter Lounge</a>
+            <a class="ghost-button" href="#timeline">Browse Memories</a>
+          </div>
+        </div>
+        <div class="hero-terminal crt">
+          <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="terminal-label">SYS$PROMPT</span>
+          </div>
+          <pre class="terminal-display" id="terminalDisplay" aria-live="polite"></pre>
+        </div>
+      </header>
+
+      <section id="mission" class="mission-section">
+        <h2>Our Prime Directives</h2>
+        <div class="directive-grid">
+          <article class="directive-card">
+            <h3>01. Preserve the Glow</h3>
+            <p>
+              Archive the neon spirit of arcades, laser grids, and midnight
+              drives down pixel-perfect highways.
+            </p>
+          </article>
+          <article class="directive-card">
+            <h3>02. Share the Signal</h3>
+            <p>
+              Broadcast mixtapes, demo disks, zines, and long-forgotten cheat
+              codes across the cosmos.
+            </p>
+          </article>
+          <article class="directive-card">
+            <h3>03. Hack the Future</h3>
+            <p>
+              Remix nostalgia with modern magic and craft new synthwave
+              experiences for the next generation dreamers.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="timeline" class="timeline-section">
+        <h2>Signal Timeline</h2>
+        <div class="timeline">
+          <article class="timeline-item" data-year="1987">
+            <h3>Dial-Up Awakening</h3>
+            <p>
+              The first Retro Byte transmission hit local BBS boards, complete
+              with ANSI art and a secret handshake.
+            </p>
+          </article>
+          <article class="timeline-item" data-year="1993">
+            <h3>Arcade Takeover</h3>
+            <p>
+              Members installed custom sound chips in pinball machines, creating
+              the legendary galaxy mode soundtrack.
+            </p>
+          </article>
+          <article class="timeline-item" data-year="1999">
+            <h3>Y2K Watch Party</h3>
+            <p>
+              We counted down to the millennium on CRT stacks while streaming a
+              live tracker set from the club basement.
+            </p>
+          </article>
+          <article class="timeline-item" data-year="2003">
+            <h3>Neon Revival</h3>
+            <p>
+              Vinyl pressings returned with holographic sleeves and a hidden
+              URL to the underground flash portal.
+            </p>
+          </article>
+          <article class="timeline-item" data-year="2025">
+            <h3>Cassette Cloud</h3>
+            <p>
+              Today we remaster the classics in the cloud and beam them
+              straight to your deck via synthwave satellite.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="lounge" class="lounge-section">
+        <h2>Members-Only Lounge</h2>
+        <div class="lounge-grid">
+          <div class="holo-card">
+            <h3>Pixelboard</h3>
+            <p>
+              Leave a message for fellow travelers. ASCII art highly encouraged.
+            </p>
+            <textarea id="pixelboard" placeholder="> > Broadcast your vibe..."></textarea>
+            <button id="pixelboardButton" type="button">Transmit</button>
+            <ul id="pixelboardFeed" aria-live="polite"></ul>
+          </div>
+          <div class="holo-card">
+            <h3>Mixtape of the Night</h3>
+            <p>Tune into a curated synthwave journey.</p>
+            <audio controls preload="metadata">
+              <source
+                src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d6bde53f87.mp3?filename=digital-future-11490.mp3"
+                type="audio/mpeg"
+              />
+              Your browser cannot hear the vibes. Try updating to a modern
+              interface.
+            </audio>
+          </div>
+          <div class="holo-card status-panel">
+            <h3>System Status</h3>
+            <ul class="status-list">
+              <li><span class="status-light online"></span> Starfield projector</li>
+              <li><span class="status-light online"></span> CRT matrix</li>
+              <li><span class="status-light offline"></span> VHS rewinder</li>
+              <li><span class="status-light maintenance"></span> Laser grid</li>
+            </ul>
+            <button id="statusRefresh" type="button">Run Diagnostics</button>
+            <div class="status-report" id="statusReport"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gallery-section">
+        <h2>Visual Frequencies</h2>
+        <div class="gallery">
+          <figure class="gallery-card">
+            <div class="crt-frame">
+              <div class="scanline-layer"></div>
+              <img src="https://images.unsplash.com/photo-1526401485004-46910ecc8e51?auto=format&fit=crop&w=900&q=80" alt="Retro arcade neon lights" />
+            </div>
+            <figcaption>Neon Arcade District // Sector 7</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <div class="crt-frame">
+              <div class="scanline-layer"></div>
+              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Sunset grid horizon" />
+            </div>
+            <figcaption>Sunset Grid Run // 23:59</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <div class="crt-frame">
+              <div class="scanline-layer"></div>
+              <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92eee?auto=format&fit=crop&w=900&q=80" alt="Stack of vintage televisions" />
+            </div>
+            <figcaption>Signal Stack // Broadcast Room</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="ticker-section" aria-label="Club updates ticker">
+        <marquee behavior="alternate" scrollamount="6">
+          ? Retro Byte Club welcomes new members every Friday // Download the
+          latest zine // Backup your floppies // Respect the synth ?
+        </marquee>
+      </section>
+
+      <section id="contact" class="contact-section">
+        <h2>Connect to the Mainframe</h2>
+        <form class="contact-form" action="#" method="post">
+          <label>
+            Handle
+            <input type="text" name="handle" placeholder="SYNTH-K1D" required />
+          </label>
+          <label>
+            Frequency
+            <input type="email" name="frequency" placeholder="signal@retrobyte.club" required />
+          </label>
+          <label>
+            Transmission
+            <textarea name="transmission" rows="4" placeholder="Drop your message in ANSI."></textarea>
+          </label>
+          <button class="neon-button" type="submit">Send Signal</button>
+        </form>
+        <aside class="contact-aside">
+          <h3>Secret Channels</h3>
+          <ul>
+            <li>IRC: <code>#retrobyte</code> on <code>irc.neonnet.org</code></li>
+            <li>Telnet: <code>bbs.retrobyte.club:2323</code></li>
+            <li>Shortwave: <code>88.8 MHz - Friday 23:00 UTC</code></li>
+          </ul>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p>? 1987-2025 Retro Byte Collective. Keep the signal alive.</p>
+      <div class="footer-grid">
+        <span>Made with love, lasers, and floppy disks.</span>
+        <span>Version 5.25" // Build 1337</span>
+        <span class="footer-emoji" aria-hidden="true">???</span>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
