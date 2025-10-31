@@ -1,182 +1,306 @@
-// Retro Website JavaScript
-// Because every 90s site needs some JavaScript!
+// Game canvas and context
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-// Update visitor counter with random increment
-function updateCounter() {
-    const counter = document.getElementById('counter');
-    let currentCount = parseInt(counter.textContent) || 1337;
-    
-    // Random increment between 1-5
-    currentCount += Math.floor(Math.random() * 5) + 1;
-    counter.textContent = currentCount;
-    
-    // Add flash effect
-    counter.style.color = '#ffff00';
-    counter.style.textShadow = '0 0 20px #ffff00';
-    
-    setTimeout(() => {
-        counter.style.color = '';
-        counter.style.textShadow = '';
-    }, 500);
-}
+// Set canvas size
+canvas.width = 800;
+canvas.height = 600;
 
-// Update date
-function updateDate() {
-    const dateElement = document.getElementById('date');
-    if (dateElement) {
-        const now = new Date();
-        const dateString = now.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-        });
-        dateElement.textContent = dateString.toUpperCase();
-    }
-}
+// Game state
+let gameState = 'start'; // 'start', 'playing', 'gameover'
+let score = 0;
+let lives = 3;
+let gameFrame = 0;
 
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Update counter periodically
-    setInterval(updateCounter, 5000);
+// Player
+const player = {
+    x: canvas.width / 2 - 15,
+    y: canvas.height - 60,
+    width: 30,
+    height: 30,
+    speed: 5,
+    color: '#00ffff'
+};
+
+// Bullets
+const bullets = [];
+const bulletSpeed = 8;
+
+// Enemies
+const enemies = [];
+let enemySpawnRate = 60;
+let enemySpeed = 2;
+
+// Particles
+const particles = [];
+
+// Input handling
+const keys = {};
+
+window.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+    if (e.key === ' ') e.preventDefault();
     
-    // Update date
-    updateDate();
-    
-    // Handle navigation clicks
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
-            
-            if (targetSection) {
-                // Add flash effect
-                targetSection.style.border = '3px solid #ff00ff';
-                targetSection.style.boxShadow = '0 0 30px #ff00ff';
-                
-                setTimeout(() => {
-                    targetSection.style.border = '';
-                    targetSection.style.boxShadow = '';
-                }, 1000);
-                
-                // Smooth scroll
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-    
-    // Handle form submission
-    const retroForm = document.querySelector('.retro-form');
-    if (retroForm) {
-        retroForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show retro alert
-            alert('THANK YOU FOR SIGNING MY GUESTBOOK!\n\nYour entry has been "saved" to the server!\n(Just like in the 90s!)');
-            
-            // Flash effect
-            this.style.border = '2px dashed #ff00ff';
-            this.style.boxShadow = '0 0 20px #ff00ff';
-            
-            setTimeout(() => {
-                this.style.border = '';
-                this.style.boxShadow = '';
-                this.reset();
-            }, 2000);
-        });
+    if (gameState === 'start' && e.key === ' ') {
+        gameState = 'playing';
+        document.getElementById('startScreen').classList.add('hidden');
     }
     
-    // Add random mouse trail effect (90s style!)
-    let trail = [];
-    const maxTrailLength = 20;
-    
-    document.addEventListener('mousemove', function(e) {
-        // Create trail element occasionally
-        if (Math.random() > 0.7) {
-            const trailElement = document.createElement('div');
-            trailElement.className = 'mouse-trail';
-            trailElement.style.position = 'fixed';
-            trailElement.style.left = e.clientX + 'px';
-            trailElement.style.top = e.clientY + 'px';
-            trailElement.style.width = '4px';
-            trailElement.style.height = '4px';
-            trailElement.style.background = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'][Math.floor(Math.random() * 4)];
-            trailElement.style.borderRadius = '50%';
-            trailElement.style.pointerEvents = 'none';
-            trailElement.style.zIndex = '9999';
-            document.body.appendChild(trailElement);
-            
-            setTimeout(() => {
-                trailElement.style.opacity = '0';
-                trailElement.style.transition = 'opacity 0.5s';
-                setTimeout(() => trailElement.remove(), 500);
-            }, 100);
-        }
-    });
-    
-    // Add random blink effects to elements
-    const blinkables = document.querySelectorAll('h2, .content-box, .pixel-art');
-    setInterval(() => {
-        const randomElement = blinkables[Math.floor(Math.random() * blinkables.length)];
-        randomElement.style.filter = 'brightness(1.5)';
-        setTimeout(() => {
-            randomElement.style.filter = '';
-        }, 200);
-    }, 3000);
-    
-    // Console easter egg
-    console.log('%c? RETRO ZONE ?', 'color: #00ff00; font-size: 20px; font-weight: bold;');
-    console.log('%cWelcome to the retro zone! Type "retroSecret()" for a surprise!', 'color: #ff00ff; font-size: 14px;');
-    
-    // Easter egg function
-    window.retroSecret = function() {
-        alert('?? YOU FOUND THE SECRET! ??\n\nYou are now officially RAD!');
-        document.body.style.animation = 'none';
-        setTimeout(() => {
-            document.body.style.background = 'linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff)';
-            document.body.style.backgroundSize = '400% 400%';
-            document.body.style.animation = 'gradientShift 2s ease infinite';
-        }, 100);
-    };
-    
-    // Create floating pixel art occasionally
-    setInterval(() => {
-        if (Math.random() > 0.8) {
-            const pixel = document.createElement('div');
-            pixel.textContent = ['?', '?', '?', '?'][Math.floor(Math.random() * 4)];
-            pixel.style.position = 'fixed';
-            pixel.style.left = Math.random() * 100 + '%';
-            pixel.style.top = '-50px';
-            pixel.style.color = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'][Math.floor(Math.random() * 4)];
-            pixel.style.fontSize = '30px';
-            pixel.style.pointerEvents = 'none';
-            pixel.style.zIndex = '9998';
-            pixel.style.animation = 'floatDown 5s linear forwards';
-            document.body.appendChild(pixel);
-            
-            setTimeout(() => pixel.remove(), 5000);
-        }
-    }, 2000);
-    
-    // Add float down animation if not exists
-    if (!document.querySelector('style[data-float-animation]')) {
-        const style = document.createElement('style');
-        style.setAttribute('data-float-animation', 'true');
-        style.textContent = `
-            @keyframes floatDown {
-                0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-                100% { transform: translateY(calc(100vh + 50px)) rotate(360deg); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+    if (gameState === 'gameover' && e.key === ' ') {
+        resetGame();
     }
 });
 
-// Add some terminal-style console messages
-console.log('%c? RETRO WEBSITE INITIALIZED ?', 'color: #00ff00; font-weight: bold;');
-console.log('%cLoading retro modules...', 'color: #00ffff;');
-console.log('%c? Blink tags: ENABLED', 'color: #00ff00;');
-console.log('%c? Marquee tags: ENABLED', 'color: #00ff00;');
-console.log('%c? Neon effects: ENABLED', 'color: #00ff00;');
-console.log('%c? Nostalgia mode: 100%', 'color: #ff00ff; font-weight: bold;');
+window.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+});
+
+// Reset game
+function resetGame() {
+    gameState = 'playing';
+    score = 0;
+    lives = 3;
+    gameFrame = 0;
+    bullets.length = 0;
+    enemies.length = 0;
+    particles.length = 0;
+    player.x = canvas.width / 2 - 15;
+    player.y = canvas.height - 60;
+    enemySpawnRate = 60;
+    enemySpeed = 2;
+    document.getElementById('gameOver').classList.add('hidden');
+    document.getElementById('startScreen').classList.add('hidden');
+    updateUI();
+}
+
+// Update UI
+function updateUI() {
+    document.getElementById('scoreValue').textContent = score;
+    document.getElementById('livesValue').textContent = lives;
+}
+
+// Create particle
+function createParticles(x, y, color) {
+    for (let i = 0; i < 8; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            life: 30,
+            color: color
+        });
+    }
+}
+
+// Player shooting
+function shoot() {
+    bullets.push({
+        x: player.x + player.width / 2,
+        y: player.y,
+        width: 4,
+        height: 10
+    });
+}
+
+// Spawn enemy
+function spawnEnemy() {
+    enemies.push({
+        x: Math.random() * (canvas.width - 30),
+        y: -30,
+        width: 30,
+        height: 30,
+        speed: enemySpeed + Math.random() * 1,
+        color: '#ff00ff'
+    });
+}
+
+// Collision detection
+function checkCollision(rect1, rect2) {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+}
+
+// Update game
+function update() {
+    if (gameState !== 'playing') return;
+    
+    gameFrame++;
+    
+    // Player movement
+    if (keys['ArrowLeft'] && player.x > 0) {
+        player.x -= player.speed;
+    }
+    if (keys['ArrowRight'] && player.x < canvas.width - player.width) {
+        player.x += player.speed;
+    }
+    if (keys['ArrowUp'] && player.y > 0) {
+        player.y -= player.speed;
+    }
+    if (keys['ArrowDown'] && player.y < canvas.height - player.height) {
+        player.y += player.speed;
+    }
+    
+    // Shooting
+    if (keys[' '] && gameFrame % 10 === 0) {
+        shoot();
+    }
+    
+    // Update bullets
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        bullets[i].y -= bulletSpeed;
+        
+        // Remove bullets that are off screen
+        if (bullets[i].y < 0) {
+            bullets.splice(i, 1);
+            continue;
+        }
+        
+        // Check bullet-enemy collisions
+        for (let j = enemies.length - 1; j >= 0; j--) {
+            if (checkCollision(bullets[i], enemies[j])) {
+                createParticles(enemies[j].x + enemies[j].width / 2, 
+                               enemies[j].y + enemies[j].height / 2, '#ffff00');
+                enemies.splice(j, 1);
+                bullets.splice(i, 1);
+                score += 10;
+                updateUI();
+                break;
+            }
+        }
+    }
+    
+    // Spawn enemies
+    if (gameFrame % enemySpawnRate === 0) {
+        spawnEnemy();
+    }
+    
+    // Increase difficulty
+    if (gameFrame % 600 === 0) {
+        enemySpawnRate = Math.max(30, enemySpawnRate - 5);
+        enemySpeed += 0.3;
+    }
+    
+    // Update enemies
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        enemies[i].y += enemies[i].speed;
+        
+        // Check enemy-player collision
+        if (checkCollision(enemies[i], player)) {
+            createParticles(player.x + player.width / 2, 
+                           player.y + player.height / 2, '#00ffff');
+            enemies.splice(i, 1);
+            lives--;
+            updateUI();
+            
+            if (lives <= 0) {
+                gameState = 'gameover';
+                document.getElementById('finalScore').textContent = score;
+                document.getElementById('gameOver').classList.remove('hidden');
+            }
+            break;
+        }
+        
+        // Remove enemies that are off screen
+        if (enemies[i].y > canvas.height) {
+            enemies.splice(i, 1);
+        }
+    }
+    
+    // Update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].x += particles[i].vx;
+        particles[i].y += particles[i].vy;
+        particles[i].life--;
+        
+        if (particles[i].life <= 0) {
+            particles.splice(i, 1);
+        }
+    }
+}
+
+// Draw functions
+function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+    
+    // Draw glow
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+    ctx.shadowBlur = 0;
+}
+
+function drawBullets() {
+    ctx.fillStyle = '#00ff00';
+    for (let bullet of bullets) {
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ff00';
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+        ctx.shadowBlur = 0;
+    }
+}
+
+function drawEnemies() {
+    for (let enemy of enemies) {
+        ctx.fillStyle = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        ctx.shadowBlur = 0;
+    }
+}
+
+function drawParticles() {
+    for (let particle of particles) {
+        const alpha = particle.life / 30;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+        ctx.globalAlpha = 1;
+    }
+}
+
+function drawBackground() {
+    // Starfield effect
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 50; i++) {
+        const x = (i * 37) % canvas.width;
+        const y = (i * 53 + gameFrame * 0.5) % canvas.height;
+        ctx.globalAlpha = Math.sin(gameFrame * 0.1 + i) * 0.5 + 0.5;
+        ctx.fillRect(x, y, 2, 2);
+    }
+    ctx.globalAlpha = 1;
+}
+
+// Render
+function render() {
+    // Clear canvas
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw background
+    drawBackground();
+    
+    if (gameState === 'playing') {
+        drawPlayer();
+        drawBullets();
+        drawEnemies();
+        drawParticles();
+    }
+}
+
+// Game loop
+function gameLoop() {
+    update();
+    render();
+    requestAnimationFrame(gameLoop);
+}
+
+// Start game loop
+gameLoop();
+updateUI();
