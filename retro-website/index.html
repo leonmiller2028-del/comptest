@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RETROVERSE // 199X</title>
+  <meta name="description" content="A lovingly-crafted retro web experience: neon grids, CRT vibes, and pure 199X energy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="icon" href="/retro-website/assets/favicon.png"/>
+  <link rel="stylesheet" href="/retro-website/css/styles.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div id="stars"></div>
+
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-glitch" data-text="RETROVERSE">RETROVERSE</span>
+      <span class="year">199X</span>
+    </div>
+    <nav class="nav">
+      <a href="#about">ABOUT</a>
+      <a href="#gallery">GALLERY</a>
+      <a href="#downloads">DOWNLOADS</a>
+      <button id="themeToggle" class="btn-outline" aria-label="Toggle theme">CRT</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="grid-bg" aria-hidden="true"></div>
+      <h1 class="title">
+        <span class="title-top">WELCOME TO</span>
+        <span class="title-main" data-glitch="THE RETROVERSE">THE RETROVERSE</span>
+      </h1>
+      <p class="subtitle">Neon dreams, floppy disks, dial?up tones, and endless nights.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="#downloads">GET THE DISK</a>
+        <a class="btn-ghost" href="#gallery">SEE THE VIBES</a>
+      </div>
+      <div class="marquee" role="marquee" aria-label="Latest news ticker">
+        <div class="track">
+          <span>NEW: ANSI pack v2.1 ? </span>
+          <span>SCENE: BBS meetup Friday ? </span>
+          <span>GREETZ: SYSOPs, DEMO crews, warez wizards ? </span>
+          <span>TIP: Set your CRT to 85Hz ? </span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="panel">
+      <h2>ABOUT</h2>
+      <p>
+        This is a tribute to the web we grew up with: chunky pixels, loud gradients,
+        and a touch of analog imperfection. Built with modern CSS but beating with a 90s heart.
+      </p>
+      <ul class="features">
+        <li>CRT bloom + scanlines</li>
+        <li>Neon synthwave grid</li>
+        <li>Glitch typography</li>
+        <li>Cursor trail + keyboard easter egg</li>
+      </ul>
+    </section>
+
+    <section id="gallery" class="panel gallery">
+      <h2>GALLERY</h2>
+      <div class="cards">
+        <figure class="card">
+          <img src="https://images.unsplash.com/photo-1516908205727-40afad9449d9?q=80&w=1200&auto=format&fit=crop" alt="Neon cityscape" />
+          <figcaption>NEON CITY</figcaption>
+        </figure>
+        <figure class="card">
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop" alt="CRT monitor" />
+          <figcaption>GLASS CRT</figcaption>
+        </figure>
+        <figure class="card">
+          <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop" alt="Cassette tape" />
+          <figcaption>MIXTAPE</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="downloads" class="panel downloads">
+      <h2>DOWNLOADS</h2>
+      <div class="dl-grid">
+        <a class="dl" href="#" download>
+          <span class="ext">.ZIP</span>
+          <span class="name">retroverse_199x.zip</span>
+        </a>
+        <a class="dl" href="#" download>
+          <span class="ext">.ANS</span>
+          <span class="name">ansi_pack_v2.1.ans</span>
+        </a>
+        <a class="dl" href="#" download>
+          <span class="ext">.NFO</span>
+          <span class="name">readme_warez.nfo</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>? 199X?20XX RETROVERSE. BE KIND, REWIND.</p>
+    <div class="socials">
+      <a href="#" aria-label="Visit our webring">WEBRING</a>
+      <a href="#" aria-label="Open guestbook">GUESTBOOK</a>
+      <a href="#" aria-label="Email the sysop">SYSOP</a>
+    </div>
+  </footer>
+
+  <div id="cursorTrail" aria-hidden="true"></div>
+
+  <script src="/retro-website/js/script.js" defer></script>
+</body>
+</html>
